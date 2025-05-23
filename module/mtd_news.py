@@ -12,45 +12,45 @@ NEWS_URL    = os.getenv('MTD_NEWS_URL')
 WEBHOOK_URL = os.getenv('MTD_WEBHOOK_URL')
 
 MTD_NEWS_TAG = {
-  1: 'MAINTENANCE',
-  2: 'UPDATE',
-  3: 'GACHA',
-  4: 'EVENT',
-  5: 'CAMPAIGN',
-  6: 'BUG',
-  7: 'MISC',
+    1: 'MAINTENANCE',
+    2: 'UPDATE',
+    3: 'GACHA',
+    4: 'EVENT',
+    5: 'CAMPAIGN',
+    6: 'BUG',
+    7: 'MISC',
 }
 
 MTD_NEWS_ICON = {
-  1: 'https://cdn-icons-png.flaticon.com/512/777/777081.png',
-  2: 'https://cdn.icon-icons.com/icons2/1508/PNG/512/updatemanager_104426.png',
-  3: 'https://cdn-icons-png.flaticon.com/512/4230/4230567.png',
-  4: 'https://cdn-icons-png.flaticon.com/512/4285/4285436.png',
-  5: 'https://cdn-icons-png.flaticon.com/512/3867/3867424.png',
-  6: 'https://www.iconsdb.com/icons/preview/red/error-7-xxl.png',
-  7: 'https://cdn-icons-png.flaticon.com/512/1827/1827301.png'
+    1: 'https://cdn-icons-png.flaticon.com/512/777/777081.png',
+    2: 'https://cdn.icon-icons.com/icons2/1508/PNG/512/updatemanager_104426.png',
+    3: 'https://cdn-icons-png.flaticon.com/512/4230/4230567.png',
+    4: 'https://cdn-icons-png.flaticon.com/512/4285/4285436.png',
+    5: 'https://cdn-icons-png.flaticon.com/512/3867/3867424.png',
+    6: 'https://www.iconsdb.com/icons/preview/red/error-7-xxl.png',
+    7: 'https://cdn-icons-png.flaticon.com/512/1827/1827301.png'
 }
 
 MTD_NEWS_COLOR = {
-  1: 0xfc3aef,
-  2: 0x5299f7,
-  3: 0xfad73c,
-  4: 0x50faf4,
-  5: 0xff5cb0,
-  6: 0xdb043e,
-  7: 0xcccccc,
+    1: 0xfc3aef,
+    2: 0x5299f7,
+    3: 0xfad73c,
+    4: 0x50faf4,
+    5: 0xff5cb0,
+    6: 0xdb043e,
+    7: 0xcccccc,
 }
 
 MTD_VOCAB_JP = {
-  'NEWS_TAG': {
-    1: 'メンテナンス',
-    2: 'アップデート',
-    3: 'ガチャ',
-    4: 'イベント',
-    5: 'キャンペーン',
-    6: '不具合',
-    7: 'その他',
-  }
+    'NEWS_TAG': {
+        1: 'メンテナンス',
+        2: 'アップデート',
+        3: 'ガチャ',
+        4: 'イベント',
+        5: 'キャンペーン',
+        6: '不具合',
+        7: 'その他',
+    }
 }
 
 def get_webhook_url():

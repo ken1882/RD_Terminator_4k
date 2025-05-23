@@ -218,7 +218,7 @@ def send_message(url, obj):
     return requests.post(
         url,
         json={
-            'content': f"https://vxtwitter.com/{obj['account']}/status/{obj['id']}"
+            'content': f"https://fixupx.com/{obj['account']}/status/{obj['id']}"
         },
         timeout=_G.REQUEST_TIMEOUT
     )
