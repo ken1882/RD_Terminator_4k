@@ -200,11 +200,13 @@ def update_tweets(account):
 def update():
     global Agent, ErrorCnt
     if not Agent:
+        if ErrorCnt < 0:
+            utils.restart()
         return
     if not timer.is_expired(TIMER_UPDATE_KEY):
         return
-    err_threshold = len(TWITTER_LISTENERS.keys())
-    if ErrorCnt > err_threshold:
+    if ErrorCnt >= len(TWITTER_LISTENERS):
+        logger.warning("Trying to reconnect Twitter due to errors")
         Agent = None
         connect_twitter()
     for account in TWITTER_LISTENERS:
@@ -240,11 +242,12 @@ def connect_twitter():
         logger.info(f"Twitter connected: {a}")
     except Exception as err:
         utils.handle_exception(err)
-        if ErrorCnt > 10:
+        if ErrorCnt >= len(TWITTER_LISTENERS)*2:
             msg = "Disable twitter module due to successive errors"
             logger.warning(msg)
             utils.send_critical_message(f"{msg}\bError: {err}")
             Agent = None
+            ErrorCnt = -1
             return
         logger.info(f"Try using username/pwd to sign in again, depth={ErrorCnt}")
         Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))

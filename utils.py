@@ -2,6 +2,7 @@ import _G
 import traceback
 import requests
 import os
+import subprocess
 from datetime import datetime
 from logger import logger
 
@@ -33,3 +34,20 @@ def send_critical_message(*messages, sep=' '):
             'value': msg
         })
     return requests.post(os.getenv('DEBUG_WEBHOOK'), json=payload)
+
+def restart():
+    logger.warning("Restarting...")
+    if _G.IS_LINUX:
+        subprocess.Popen(
+            ['bash', './restart.sh'],
+            start_new_session=True,
+        )
+    elif _G.IS_WIN32:
+        DETACHED_PROCESS = 0x00000008
+        subprocess.Popen(
+            ["cmd.exe", "/c", ".\\restart.bat"],
+            creationflags=DETACHED_PROCESS
+        )
+    else:
+        logger.error("Unsupported platform for restart script")
+        exit(1)
