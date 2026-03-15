@@ -155,14 +155,21 @@ def update_tweets(account):
     logger.info(f"Gathering {account} new tweets")
     ar = []
     for n in news:
-        if not olds or n['id'] > olds[0]['id'] or (n['id'] == olds[0]['id'] and not is_same_message(n['message'], olds[0]['message'])):
+        ok = False
+        if not olds:
             ok = True
-            if 'handler' in data:
-                ok = data['handler'](n)
-            if ok:
-                ar.insert(0, n)
+            logger.debug("Boardcast news, reason: no old news")
+        elif n['id'] > olds[0]['id']:
+            ok = True
+            logger.debug("Boardcast news, reason: newer id than old news")
+        elif n['id'] == olds[0]['id'] and not is_same_message(n['message'], olds[0]['message']):
+            ok = True
+            logger.debug("Boardcast news, reason: latest post updated")
         else:
             break
+        if ok and ('handler' not in data or data['handler'](n)):
+            ar.insert(0, n)
+
     urls = []
     if webhook:
         urls = webhook.split(',')
