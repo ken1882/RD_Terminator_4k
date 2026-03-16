@@ -104,7 +104,7 @@ def get_new_tweets(account:str):
     except Exception as err:
         utils.handle_exception(err)
         return []
-    ret = sorted(ret, key=lambda o: -o['id'])
+    ret = sorted(ret, key=lambda o: o['id'], reverse=True)
     return ret
 
 def get_old_tweets(account, prev_file):
@@ -113,14 +113,13 @@ def get_old_tweets(account, prev_file):
         ret = get_new_tweets(account)
         if not ret:
             return []
-        with open(prev_file, 'w') as fp:
-            json.dump(ret, fp)
+        save_tweets(account, ret)
     try:
         with open(prev_file, 'r') as fp:
             ret = json.load(fp)
     except Exception:
         ret = []
-    ret = sorted(ret, key=lambda o: -o['id'])
+    ret = sorted(ret, key=lambda o: o['id'], reverse=True)
     return ret
 
 def is_same_message(a, b):
@@ -174,7 +173,7 @@ def update_tweets(account):
             logger.debug("Boardcast news, reason: latest post updated")
         else:
             break
-        if n['id'] in TweetHistory[account]:
+        if n['id'] in TweetHistory[account] and any([n['id'] == o['id'] for o in olds]):
             logger.info(f"Skip {account}/{n['id']}, reason: duplicated id in history")
             continue
         if ok and ('handler' not in data or data['handler'](n)):
@@ -204,8 +203,7 @@ def update_tweets(account):
                 send_message(u, a)
     except Exception as err:
         utils.handle_exception(err)
-    with open(prev_file, 'w') as fp:
-        json.dump(news, fp)
+    save_tweets(account, news)
     return True
 
 def update():
@@ -262,6 +260,12 @@ def connect_twitter():
             return
         logger.info(f"Try using username/pwd to sign in again, depth={ErrorCnt}")
         Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))
+
+def save_tweets(account, tweets):
+    prev_file = f"{_G.CACHE_DIR}/{account}_prevtweets.json"
+    # only keeps latest 100 tweets
+    with open(prev_file, 'w') as fp:
+        json.dump(sorted(tweets, key=lambda x: x['id'], reverse=True)[:100], fp)
 
 def init():
     connect_twitter()
