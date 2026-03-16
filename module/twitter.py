@@ -137,7 +137,7 @@ def update_tweets(account):
     news = []
     try:
         news = get_new_tweets(account)
-        news = sorted(news, key=lambda o: -o['id'])
+        news = sorted(news, key=lambda o: o['id'], reverse=True)
     except Exception as err:
         utils.handle_exception(err)
         return

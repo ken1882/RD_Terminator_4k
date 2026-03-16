@@ -102,9 +102,8 @@ def get_old_news():
     ret = {}
     if not os.path.exists(PREV_NEWS_FILE):
         ret = get_news_data()
-        ret = sorted(ret, key=lambda o: -o['id'])
-        with open(PREV_NEWS_FILE, 'w') as fp:
-            json.dump(ret, fp)
+        ret = sorted(ret, key=lambda o: o['id'], reverse=True)
+        save_news(ret)
     else:
         with open(PREV_NEWS_FILE, 'r') as fp:
             ret = json.load(fp)
@@ -115,7 +114,7 @@ def update():
     news = {}
     try:
         news = get_news_data()
-        news = sorted(news, key=lambda o: -o['id'])
+        news = sorted(news, key=lambda o: o['id'], reverse=True)
     except Exception as err:
         utils.handle_exception(err)
         return
@@ -148,9 +147,11 @@ def update():
             send_message(a)
         except Exception as err:
             utils.handle_exception(err)
-    with open(PREV_NEWS_FILE, 'w') as fp:
-        json.dump(news, fp)
+    save_news(news)
 
+def save_news(news):
+    with open(PREV_NEWS_FILE, 'w') as fp:
+        json.dump(sorted(news, key=lambda o: o['id'], reverse=True)[:100], fp)
 
 def send_message(obj):
     payload = {}
