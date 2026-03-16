@@ -5,6 +5,7 @@ import os
 import re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as BS
+from collections import deque
 import _G
 import utils
 import timer
@@ -61,6 +62,8 @@ Agent:Twitter = None
 ErrorCnt = 0
 
 TIMER_UPDATE_KEY = 'twitter_update'
+
+TweetHistory = {k:deque(maxlen=10) for k in TWITTER_LISTENERS}
 
 def parse_tweet(tweet):
     ret = {}
@@ -171,7 +174,11 @@ def update_tweets(account):
             logger.debug("Boardcast news, reason: latest post updated")
         else:
             break
+        if n['id'] in TweetHistory[account]:
+            logger.info(f"Skip {account}/{n['id']}, reason: duplicated id in history")
+            continue
         if ok and ('handler' not in data or data['handler'](n)):
+            TweetHistory[account].append(n['id'])
             ar.insert(0, n)
 
     urls = []
