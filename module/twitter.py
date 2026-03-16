@@ -41,10 +41,14 @@ TWITTER_LISTENERS = {
         'mention': os.getenv('FFXIV_GAME_ROLE'),
         'handler': xhandler.filter_ffxiv_recruits,
     },
-    'Angelica_Aster': {
-        'webhook': os.getenv('AA_TWT_WEBHOOK'),
-        'mention': os.getenv('AA_GAME_ROLE'),
-    }
+    # 'Angelica_Aster': {
+    #     'webhook': os.getenv('AA_TWT_WEBHOOK'),
+    #     'mention': os.getenv('AA_GAME_ROLE'),
+    # },
+    'rlyehshoujotai': {
+        'webhook': os.getenv('JSC_TWT_WEBHOOK'),
+        'mention': os.getenv('JSC_GAME_ROLE'),
+    },
 }
 
 ACTIVE_HOURS    = []
