@@ -12,7 +12,7 @@ import timer
 from logger import logger
 import hashlib
 from tweety import Twitter
-from tweety.types.twDataTypes import SelfThread
+from tweety.types.twDataTypes import SelfThread, get_running_loop
 from tweety.exceptions import TwitterError
 import module.tweet_handler as xhandler
 
@@ -59,6 +59,7 @@ NORMAL_INTERVAL = 5
 LAZY_INTERVAL   = 30
 
 Agent:Twitter = None
+AgentLoop:asyncio.AbstractEventLoop = None
 ErrorCnt = 0
 
 TIMER_UPDATE_KEY = 'twitter_update'
@@ -95,11 +96,11 @@ def get_new_tweets(account:str):
     global Agent
     ret = []
     try:
-        tweets = Agent.get_tweets(account)
+        tweets = arun(Agent.get_tweets(account))
         ret = parse_tweet_threads(tweets)
     except TwitterError:
-        connect_twitter()
-        tweets = Agent.get_tweets(account)
+        arun(connect_twitter())
+        tweets = arun(Agent.get_tweets(account))
         ret = parse_tweet_threads(tweets)
     except Exception as err:
         utils.handle_exception(err)
@@ -241,13 +242,13 @@ def send_message(url, obj):
         timeout=_G.REQUEST_TIMEOUT
     )
 
-def connect_twitter():
+async def connect_twitter():
     global Agent, ErrorCnt
     Agent = Twitter('session')
     try:
-        a = Agent.connect()
+        a = await Agent.connect()
         if not a:
-            a = Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))
+            a = await Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))
         logger.info(f"Twitter connected: {a}")
     except Exception as err:
         utils.handle_exception(err)
@@ -259,7 +260,7 @@ def connect_twitter():
             ErrorCnt = -1
             return
         logger.info(f"Try using username/pwd to sign in again, depth={ErrorCnt}")
-        Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))
+        await Agent.sign_in(os.getenv('TWITTER_USERNAME'), os.getenv('TWITTER_PASSWORD'))
 
 def save_tweets(account, tweets):
     prev_file = f"{_G.CACHE_DIR}/{account}_prevtweets.json"
@@ -267,8 +268,14 @@ def save_tweets(account, tweets):
     with open(prev_file, 'w') as fp:
         json.dump(sorted(tweets, key=lambda x: x['id'], reverse=True)[:100], fp)
 
+def arun(coro):
+    global AgentLoop
+    if not AgentLoop:
+        AgentLoop = get_running_loop()
+    return AgentLoop.run_until_complete(coro)
+
 def init():
-    connect_twitter()
+    arun(connect_twitter())
     timer.set_timer(TIMER_UPDATE_KEY, timedelta(seconds=10))
 
 def reload():
