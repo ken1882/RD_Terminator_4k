@@ -272,7 +272,9 @@ def arun(coro):
     global AgentLoop
     if not AgentLoop:
         AgentLoop = get_running_loop()
-    return AgentLoop.run_until_complete(coro)
+    if asyncio.iscoroutine(coro):
+        return AgentLoop.run_until_complete(coro)
+    return coro
 
 def init():
     arun(connect_twitter())
