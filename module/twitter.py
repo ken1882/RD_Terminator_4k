@@ -42,6 +42,10 @@ TWITTER_LISTENERS = {
         'mention': os.getenv('FFXIV_GAME_ROLE'),
         'handler': xhandler.filter_ffxiv_recruits,
     },
+    'dot_abyss_pr': {
+        'webhook': os.getenv('DAS_TWT_WEBHOOK'),
+        'mention': os.getenv('DAS_GAME_ROLE'),
+    }
 }
 
 ACTIVE_HOURS    = []
