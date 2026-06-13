@@ -16,12 +16,14 @@ def import_modules():
     import module.mst_news as mst_news
     import module.mtd_news as mtd_news
     import module.ff14_news as ff14_news
+    import module.das_news as das_news
     import module.twitter as twitter
     LOADED_MODULES.extend([
         tsk_news,
         mst_news,
         mtd_news,
         ff14_news,
+        das_news,
         twitter
     ])
 
