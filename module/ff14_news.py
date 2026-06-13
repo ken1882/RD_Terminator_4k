@@ -83,6 +83,7 @@ def get_news_detail(url):
         ret += "\n"
         if not content:
             logger.warning(f"Failed to get news detail from {url}")
+            return url
         ret += content.text.strip()
     except Exception as err:
         utils.handle_exception(err)
