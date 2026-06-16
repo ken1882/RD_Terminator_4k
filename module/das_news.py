@@ -98,14 +98,13 @@ def parse_tag(elm):
 
 def get_news_detail(id):
     try:
-        res = requests.get(
+        res = utils.requests_get(
             DETAIL_URL,
             params={
                 'information_id': id,
                 'is_webview': 0,
                 'token': ''
-            },
-            timeout=_G.REQUEST_TIMEOUT
+            }
         )
         doc = BS(res.content, features='lxml')
         return clean_text(doc.find('div', {'class': 'infoDetailBody'}))
@@ -141,7 +140,7 @@ def parse_news_index(doc):
 def get_news_data():
     ret = {}
     try:
-        res = requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(NEWS_URL)
         ret = parse_news_index(BS(res.content, features='lxml'))
     except Exception as err:
         utils.handle_exception(err)

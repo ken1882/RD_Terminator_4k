@@ -83,7 +83,7 @@ def get_webhook_url():
 def get_news_data():
     ret = {}
     try:
-        res = requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(NEWS_URL)
         ret = []
         for a in res.json():
             id = int(a['id'])

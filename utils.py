@@ -3,8 +3,21 @@ import traceback
 import requests
 import os
 import subprocess
+import time
 from datetime import datetime
 from logger import logger
+
+def requests_get(url, retries=3, backoff=2.0, **kwargs):
+    kwargs.setdefault('timeout', _G.REQUEST_TIMEOUT)
+    last_err = None
+    for attempt in range(retries):
+        try:
+            return requests.get(url, **kwargs)
+        except requests.exceptions.RequestException as err:
+            last_err = err
+            if attempt < retries - 1:
+                time.sleep(backoff * (attempt + 1))
+    raise last_err
 
 def handle_exception(err):
     errinfo = traceback.format_exc()

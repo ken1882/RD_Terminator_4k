@@ -70,7 +70,7 @@ def get_webhook_url():
 def get_news_detail(id):
     ret = ''
     try:
-        res = requests.get(f"{NEWS_URL}?id={id}", timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(f"{NEWS_URL}?id={id}")
         doc = BS(res.content, features='lxml')
         ret = doc.text
     except Exception as err:
@@ -81,7 +81,7 @@ def get_news_detail(id):
 def get_news_data():
     ret = {}
     try:
-        res = requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(NEWS_URL)
         ret = []
         for a in res.json()['articles']:
             id = int(a['articleUrl'])

@@ -79,9 +79,8 @@ def get_webhook_url():
 def get_news_detail(id):
     ret = ''
     try:
-        res = requests.get(
-            f"https://prod-dmmclientr.twinkle-star-knights.com/api/info/detail?info_id={id}",
-            timeout=_G.REQUEST_TIMEOUT
+        res = utils.requests_get(
+            f"https://prod-dmmclientr.twinkle-star-knights.com/api/info/detail?info_id={id}"
         )
         doc = BS(res.content, features='lxml')
         for p in doc.findAll('p'):
@@ -117,7 +116,7 @@ def parse_news_index(doc):
 def get_news_data():
     ret = {}
     try:
-        res = requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(NEWS_URL)
         ret = parse_news_index(BS(res.content, features='lxml'))
     except Exception as err:
         utils.handle_exception(err)

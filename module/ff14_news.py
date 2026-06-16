@@ -71,7 +71,7 @@ def get_webhook_url():
 def get_news_detail(url):
     ret = ''
     try:
-        res = requests.get(url, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(url)
         doc = BS(res.content, features='lxml')
         content = doc.find('div', {'class':'article'})
         author  = doc.find('div', {'class':'publisher'})
@@ -93,7 +93,7 @@ def get_news_detail(url):
 def get_news_data():
     ret = {}
     try:
-        res = requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT)
+        res = utils.requests_get(NEWS_URL)
         ret = []
         doc = BS(res.content, features='lxml')
         table = doc.find('div', {'class': 'news_list'})

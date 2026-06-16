@@ -58,7 +58,7 @@ def get_webhook_url():
     return WEBHOOK_URL
 
 def get_news_data():
-    return requests.get(NEWS_URL, timeout=_G.REQUEST_TIMEOUT).json()['newsList']
+    return utils.requests_get(NEWS_URL).json()['newsList']
 
 def get_old_news():
     ret = {}
